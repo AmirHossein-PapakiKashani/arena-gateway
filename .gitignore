@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.runtime/
+.backups/
+.gemini/
+tests/live_workspace/
+debug_gemini_request.json

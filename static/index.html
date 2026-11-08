@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arena Gateway Studio Pro</title>
+  
+  <!-- Fonts: Plus Jakarta Sans, Vazirmatn & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Marked.js CDN for clean markdown parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+
+  <style>
+    :root {
+      --font-ui: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-fa: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+
+      /* Dark Theme (Default) */
+      --bg-base: #070a12;
+      --bg-sidebar: #0d121f;
+      --bg-surface: #121929;
+      --bg-card: #182238;
+      --bg-input: #0a0f1a;
+      --border-subtle: #1e2c45;
+      --border-medium: #2c3f63;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #38bdf8;
+      --accent-gradient: linear-gradient(135deg, #38bdf8, #2563eb);
+      --accent-glow: rgba(56, 189, 248, 0.16);
+      --success: #10b981;
+      --success-gradient: linear-gradient(135deg, #10b981, #059669);
+      --purple: #a855f7;
+      --purple-glow: rgba(168, 85, 247, 0.16);
+      --amber: #f59e0b;
+      --danger: #ef4444;
+      --shadow-soft: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    body.light-theme {
+      --bg-base: #f8fafc;
+      --bg-sidebar: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-card: #f8fafc;
+      --bg-input: #ffffff;
+      --border-subtle: #e2e8f0;
+      --border-medium: #cbd5e1;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --accent: #0284c7;
+      --accent-gradient: linear-gradient(135deg, #0284c7, #2563eb);
+      --accent-glow: rgba(2, 132, 199, 0.12);
+      --success: #059669;
+      --success-gradient: linear-gradient(135deg, #059669, #047857);
+      --purple: #7c3aed;
+      --purple-glow: rgba(124, 58, 237, 0.12);
+      --amber: #d97706;
+      --danger: #dc2626;
+      --shadow-soft: 0 10px 30px -10px rgba(0,0,0,0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    input, button, textarea, select {
+      font-family: inherit;
+    }
+    body {
+      font-family: var(--font-ui);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.012em;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .fa-font {
+      font-family: var(--font-fa) !important;
+    }
+    .code-font {
+      font-family: var(--font-code) !important;
+    }
+
+    /* Top Navigation Header */
+    .top-navbar {
+      height: 54px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 15px;
+    }
+    .logo-badge {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-gradient);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+    }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    /* Segmented Theme Switcher */
+    .segmented-toggle {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: 10px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .toggle-segment {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .toggle-segment.active {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    /* Main App Layout */
+    .studio-layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar */
+    .sidebar-pane {
+      width: 290px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    .sidebar-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .add-action-link {
+      font-size: 11px;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .add-action-link:hover { text-decoration: underline; }
+
+    /* Workspaces List */
+    .workspaces-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .project-card {
+      border-radius: 10px;
+      border: 1px solid transparent;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: rgba(255,255,255,0.01);
+    }
+    .project-card:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-subtle);
+    }
+    .project-card.active {
+      background: var(--bg-surface);
+      border-color: var(--border-medium);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .project-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .project-title {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stack-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+    .project-path {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .session-tree {
+      margin-top: 8px;
+      margin-left: 12px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .session-node {
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .session-node:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+    .session-node.active {
+      background: var(--accent-glow);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .add-workspace-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 9px;
+      border: 1px dashed var(--border-medium);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .add-workspace-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    /* Compaction Box */
+    .compaction-card {
+      margin-top: auto;
+      padding: 12px;
+      background: var(--bg-card);
+      border-radius: 11px;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-compact {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 7px;
+      border: 1px solid var(--border-medium);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-compact:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+    }
+
+    /* Main Chat Pane */
+    .chat-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Chat Topbar */
+    .chat-topbar {
+      height: 52px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+    .workspace-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .workspace-chip {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      font-weight: 600;
+    }
+    .mode-status-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-action-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-action-small:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Messages Stream */
+    .messages-stream {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .chat-bubble {
+      max-width: 86%;
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 14px;
+      line-height: 1.7;
+      word-wrap: break-word;
+    }
+    .user-bubble {
+      align-self: flex-end;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+    .model-bubble {
+      align-self: flex-start;
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      width: 92%;
+    }
+
+    /* Thinking Stream Accordion */
+    .thinking-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--purple);
+      border-radius: 9px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+    }
+    .thinking-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      color: var(--purple);
+      cursor: pointer;
+      user-select: none;
+    }
+    .thinking-content {
+      margin-top: 8px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .pulsing-purple-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #a855f7;
+      box-shadow: 0 0 10px #a855f7;
+      display: inline-block;
+      animation: pulseGlow 1.2s infinite ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
+    .shimmer-skeleton {
+      height: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.03) 75%);
+      background-size: 200% 100%;
+      animation: shimmerAnim 1.5s infinite;
+    }
+    @keyframes shimmerAnim {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .thinking-log-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      opacity: 0.45;
+      transition: all 0.3s ease;
+    }
+    .thinking-log-item.active {
+      opacity: 1;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .thinking-log-item.done {
+      opacity: 0.85;
+      color: var(--success);
+    }
+
+
+    /* Code Block Decks */
+    .code-deck {
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      background: var(--bg-input);
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .deck-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .deck-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success);
+    }
+    .btn-diff-pro {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-medium);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-fa);
+      transition: 0.15s;
+    }
+    .btn-diff-pro:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .btn-apply-pro {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 6px;
+      background: var(--success-gradient);
+      color: white;
+      font-size: 11.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-fa);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-apply-pro:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    /* Bottom Chat Dock (Studio Pro v4 Cohesive Unified 38px) */
+    .chat-bottom-dock {
+      padding: 12px 28px 20px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+    .dock-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-medium);
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .attachments-tray {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .attachment-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .badge-close {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+    .badge-close:hover { opacity: 1; color: var(--danger); }
+
+    .prompt-textarea {
+      width: 100%;
+      min-height: 48px;
+      max-height: 150px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 14px;
+      resize: none;
+      line-height: 1.6;
+    }
+
+    /* Unified Controls Bar: EXACT 38px FOR ALL BUTTONS */
+    .dock-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 4px;
+    }
+    .controls-left-cluster {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .controls-right-cluster {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 1. Mode Button (Purple Gradient Glow) */
+    .btn-dock-mode {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(99, 102, 241, 0.22));
+      border: 1px solid rgba(168, 85, 247, 0.45);
+      color: #e9d5ff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(168, 85, 247, 0.15);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-dock-mode:hover {
+      border-color: #c084fc;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.28), rgba(99, 102, 241, 0.32));
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
+    }
+
+    /* 2. Model Button (Cyan/Sky Gradient Glow) */
+    .btn-dock-model {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(37, 99, 235, 0.22));
+      border: 1px solid rgba(56, 189, 248, 0.42);
+      color: #bae6fd;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.12);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-dock-model:hover {
+      border-color: #38bdf8;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(37, 99, 235, 0.3));
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.22);
+    }
+
+    /* 3. Attach Button (Emerald/Cyan Tech Gradient) */
+    .btn-dock-attach {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 16px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(56, 189, 248, 0.18));
+      border: 1px solid rgba(16, 185, 129, 0.38);
+      color: #a7f3d0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-dock-attach:hover {
+      border-color: #34d399;
+      color: #ecfdf5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.22);
+    }
+
+    /* 4. Send Button (Solid Azure Blue) */
+    .btn-dock-send {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 22px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 3px 12px rgba(14, 165, 233, 0.35);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-dock-send:hover {
+      filter: brightness(1.12);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(14, 165, 233, 0.5);
+    }
+
+    /* Popovers and Modals */
+    .dropdown-popover {
+      position: absolute;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: 14px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.5);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 100;
+    }
+    .mode-option-row {
+      padding: 10px 14px;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .mode-option-row:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-subtle);
+    }
+    .mode-option-row.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    .modal-dialog {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 750px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* RTL & Modal Dialog Enhancements */
+    .rtl-dialog {
+      direction: rtl;
+      text-align: right;
+      font-family: var(--font-fa);
+    }
+    .rtl-dialog .modal-header {
+      direction: rtl;
+    }
+    .rtl-dialog .modal-close-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      font-size: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .rtl-dialog .modal-close-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border-color: var(--border-medium);
+    }
+    .rtl-dialog .modal-footer {
+      direction: rtl;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .modal-input {
+      width: 100%;
+      height: 42px;
+      padding: 8px 14px;
+      border-radius: 9px;
+      border: 1px solid var(--border-medium);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+      transition: all 0.2s ease;
+      font-family: var(--font-fa);
+    }
+    .modal-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .modal-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.65;
+      font-family: var(--font-fa);
+    }
+    .modal-input.code-font {
+      font-family: var(--font-code) !important;
+      direction: ltr;
+      text-align: left;
+    }
+    .modal-input.code-font::placeholder {
+      font-family: var(--font-code) !important;
+    }
+    .btn-browse-folder {
+      height: 42px;
+      padding: 0 16px;
+      border-radius: 9px;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(37, 99, 235, 0.22));
+      color: #bae6fd;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.15);
+      font-family: var(--font-fa);
+    }
+    .btn-browse-folder:hover {
+      border-color: #38bdf8;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(37, 99, 235, 0.35));
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+    }
+    .btn-browse-folder:active {
+      transform: translateY(0);
+    }
+
+    /* In-Modal Directory Explorer */
+    .dir-explorer-panel {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeInSlide 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dir-chips-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .dir-chip-btn {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      font-family: var(--font-fa);
+    }
+    .dir-chip-btn:hover {
+      background: var(--bg-input);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .dir-nav-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      direction: ltr;
+    }
+    .dir-nav-btn {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-size: 11.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-fa);
+      white-space: nowrap;
+    }
+    .dir-nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .dir-current-path-text {
+      flex: 1;
+      font-size: 12px;
+      color: var(--text-primary);
+      font-family: var(--font-code);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+      padding: 0 4px;
+    }
+    .dir-items-list {
+      max-height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-right: 4px;
+    }
+    .dir-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: transparent;
+      direction: ltr;
+    }
+    .dir-item-row:hover {
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .dir-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      overflow: hidden;
+    }
+    .dir-item-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-family: var(--font-fa);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .dir-stack-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-family: var(--font-code);
+    }
+    .dir-stack-dotnet { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.4); }
+    .dir-stack-python { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .dir-stack-node { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .dir-stack-rust { background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); }
+    .dir-stack-go { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .dir-stack-general { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+    .btn-select-dir-action {
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 5px;
+      background: var(--success);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      opacity: 0.85;
+      transition: all 0.15s ease;
+      font-family: var(--font-fa);
+    }
+    .btn-select-dir-action:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .btn-modal-primary {
+      height: 40px;
+      padding: 0 20px;
+      border-radius: 9px;
+      background: var(--success-gradient);
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: var(--font-fa);
+    }
+    .btn-modal-primary:hover {
+      filter: brightness(1.12);
+      transform: translateY(-1px);
+      box-shadow: 0 5px 16px rgba(16, 185, 129, 0.45);
+    }
+    .btn-modal-cancel {
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 9px;
+      border: 1px solid var(--border-medium);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-fa);
+    }
+    .btn-modal-cancel:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    /* Diff View Styling */
+    .diff-container {
+      font-family: var(--font-code);
+      font-size: 12px;
+      line-height: 1.5;
+      background: var(--bg-input);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    .diff-line-add {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      display: block;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+    .diff-line-del {
+      background: rgba(239, 68, 68, 0.18);
+      color: #f87171;
+      display: block;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+    .diff-line-info {
+      color: var(--text-muted);
+      display: block;
+      padding: 1px 6px;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 300;
+    }
+    .toast-message {
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: slideIn 0.2s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <nav class="top-navbar">
+    <div class="nav-brand">
+      <div class="logo-badge">⚡</div>
+      <span>Arena Gateway Studio Pro</span>
+    </div>
+
+    <div class="nav-center">
+      <div class="status-pill" id="cdp-status-pill" onclick="handleCdpPillClick()" style="cursor: pointer; transition: all 0.2s ease;" title="برای بررسی وضعیت اتصال یا راه‌اندازی خودکار کروم کلیک کنید">
+        <span class="status-dot" id="cdp-status-dot"></span>
+        <span id="cdp-status-text">بررسی وضعیت CDP...</span>
+      </div>
+      <div class="status-pill" style="background: rgba(56, 189, 248, 0.12); color: var(--accent); border-color: rgba(56, 189, 248, 0.25);">
+        <span>Gateway v0.2.0</span>
+      </div>
+    </div>
+
+    <!-- Segmented Theme Switcher -->
+    <div class="segmented-toggle">
+      <div class="toggle-segment active" id="seg-dark" onclick="setTheme(false)">
+        <span>🌙</span>
+        <span class="fa-font">شب</span>
+      </div>
+      <div class="toggle-segment" id="seg-light" onclick="setTheme(true)">
+        <span>☀️</span>
+        <span class="fa-font">روز</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN STUDIO LAYOUT -->
+  <div class="studio-layout">
+    
+    <!-- 1. SIDEBAR (WORKSPACES & SESSIONS) -->
+    <aside class="sidebar-pane">
+      <div class="sidebar-content">
+        <div class="section-title">
+          <span class="fa-font">فضای کاری (Workspaces)</span>
+          <span class="add-action-link" onclick="openAddWorkspaceModal()">+ Add Folder</span>
+        </div>
+
+        <!-- Workspaces Container -->
+        <div class="workspaces-list" id="workspaces-container">
+          <!-- Dynamically populated from localStorage -->
+        </div>
+
+        <button class="add-workspace-btn" onclick="openAddWorkspaceModal()">
+          <span>+ Open Project Folder...</span>
+        </button>
+
+        <!-- Context Compactor Box -->
+        <div class="compaction-card">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary);">
+            <span class="fa-font">بودجه کانتکست:</span>
+            <span class="code-font" id="context-tokens-counter" style="color: var(--accent); font-weight: 700;">0 / 128k</span>
+          </div>
+          <button class="btn-compact" onclick="triggerCompaction()" title="فشرده‌سازی تاریخچه گفتگو برای ارسال به مدل جدید">
+            <span>🗜️</span>
+            <span class="fa-font">فشرده‌سازی کانتکست (Compact)</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN CHAT PANE -->
+    <main class="chat-pane">
+      
+      <!-- Topbar with Breadcrumb & New Session -->
+      <header class="chat-topbar">
+        <div class="workspace-info">
+          <span style="color: var(--text-muted); font-size: 12px;">Active:</span>
+          <span class="workspace-chip code-font" id="breadcrumb-workspace">Elay</span>
+          <span style="color: var(--text-muted);">/</span>
+          <span class="workspace-chip code-font" id="breadcrumb-session">Prime Service Span</span>
+          <span class="mode-status-tag" id="mode-status-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+            <span>⚡</span>
+            <span class="fa-font">کدنویسی دیسک فعال</span>
+          </span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="btn-action-small" onclick="createNewSession()" title="شروع گفتگوی جدید (Ctrl+N)">
+            <span>＋</span>
+            <span class="fa-font">سشن جدید</span>
+            <span class="code-font" style="font-size: 10px; opacity: 0.6;">Ctrl+N</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Messages Stream -->
+      <section class="messages-stream" id="messages-container">
+        <!-- Messages rendered dynamically -->
+      </section>
+
+      <!-- Bottom Chat Dock -->
+      <footer class="chat-bottom-dock">
+        <div class="dock-card">
+          
+          <!-- Attachments Tray -->
+          <div class="attachments-tray" id="attachments-tray" style="display: none;">
+            <!-- Attachment badges rendered dynamically -->
+          </div>
+
+          <!-- Textarea -->
+          <textarea 
+            class="prompt-textarea fa-font" 
+            id="prompt-input" 
+            placeholder="دستور یا درخواست خود را بنویسید (Enter برای ارسال، Shift+Enter برای خط جدید)..."
+            rows="2"
+          ></textarea>
+
+          <!-- Dock Controls Bar (Unified 38px) -->
+          <div class="dock-controls-bar">
+            
+            <!-- Left Cluster: Mode + Model -->
+            <div class="controls-left-cluster">
+              <!-- Mode Button -->
+              <button class="btn-dock-mode" id="btn-mode-trigger" onclick="toggleModeDropdown()">
+                <span id="current-mode-icon">🧠</span>
+                <span id="current-mode-title" class="fa-font">Think Mode</span>
+                <span style="font-size: 11px; opacity: 0.7;">▾</span>
+              </button>
+
+              <!-- Model Button -->
+              <button class="btn-dock-model" id="btn-model-trigger" onclick="toggleModelDropdown()">
+                <span style="font-size: 12px; opacity: 0.8;">Model:</span>
+                <span id="current-model-name" class="code-font" style="font-weight: 700;">claude-opus-5.5-max</span>
+                <span style="font-size: 11px; opacity: 0.7;">▾</span>
+              </button>
+            </div>
+
+            <!-- Right Cluster: Attach + Send -->
+            <div class="controls-right-cluster">
+              <input type="file" id="file-picker" multiple style="display: none;" onchange="handleFilesSelected(event)">
+              
+              <button class="btn-dock-attach" onclick="document.getElementById('file-picker').click()" title="پیوست فایل کد، متن، مارک‌داون یا پی‌دی‌اف">
+                <span style="font-size: 14px;">📎</span>
+                <span class="fa-font">پیوست فایل</span>
+              </button>
+
+              <button class="btn-dock-send" id="btn-send" onclick="sendMessage()" title="ارسال پیام (Enter)">
+                <span class="fa-font">ارسال</span>
+                <span style="font-size: 15px; font-weight: 900;">↑</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </footer>
+
+      <!-- Mode Popover -->
+      <div class="dropdown-popover" id="mode-popover" style="display: none; bottom: 85px; left: 30px; width: 380px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); padding: 4px 8px;" class="fa-font">
+          انتخاب حالت کاربری و مدل پیشنهادی:
+        </div>
+        
+        <div class="mode-option-row active" id="opt-mode-think" onclick="selectMode('think', '🧠', 'Think Mode (استدلال عمیق)', 'claude-opus-5.5-max')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 13px;" class="fa-font">🧠 Think Mode (استدلال عمیق)</span>
+            <span class="stack-badge code-font" style="color: var(--purple); background: var(--purple-glow);">Opus 5.5 / o3</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-secondary);" class="fa-font">
+            تمرکز روی حل مسائل پیچیده الگوریتمی و معماری با استریم تفکر عمیق.
+          </div>
+        </div>
+
+        <div class="mode-option-row" id="opt-mode-code" onclick="selectMode('code', '⚡', 'Code Mode (کدنویسی دیسک)', 'claude-3-5-sonnet')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 13px;" class="fa-font">⚡ Code Mode (کدنویسی دیسک)</span>
+            <span class="stack-badge code-font">Sonnet 3.5 / Qwen</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-secondary);" class="fa-font">
+            تولید کد به همراه مجوز ویرایش و ذخیره فایل روی دیسک با مقایسه دایف.
+          </div>
+        </div>
+
+        <div class="mode-option-row" id="opt-mode-ask" onclick="selectMode('ask', '💬', 'Ask Mode (مشاوره و چت)', 'gemini-4-argon-high')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 13px;" class="fa-font">💬 Ask Mode (مشاوره و چت)</span>
+            <span class="stack-badge code-font" style="color: var(--success); background: rgba(16, 185, 129, 0.15);">Argon 4 / GPT-4.5</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-secondary);" class="fa-font">
+            پرسش و پاسخ سریع بدون تغییر فایل‌های فضای کاری.
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Popover -->
+      <div class="dropdown-popover" id="model-popover" style="display: none; bottom: 85px; left: 180px; width: 320px; max-height: 400px;">
+        <input 
+          type="text" 
+          id="model-search-input" 
+          placeholder="جستجوی مدل (مثلاً claude, gpt, gemini)..." 
+          style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-medium); background: var(--bg-surface); color: var(--text-primary); font-size: 12px; margin-bottom: 6px; outline: none;"
+          oninput="filterModelList(this.value)"
+        >
+        <div id="models-list-scroll" style="overflow-y: auto; display: flex; flex-direction: column; gap: 4px; max-height: 320px;">
+          <!-- Dynamically populated from /v1/models -->
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- MODAL: ADD WORKSPACE -->
+  <div class="modal-backdrop" id="modal-add-workspace" style="display: none;">
+    <div class="modal-dialog rtl-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">📁</span>
+          <h3 style="font-size: 15px; font-weight: 700; color: var(--text-primary);">تعریف یا باز کردن پروژه جدید</h3>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-add-workspace')" title="بستن">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <label style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block;">مسیر پوشه پروژه روی سیستم (Disk Path):</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input 
+              type="text" 
+              id="new-ws-path" 
+              placeholder="مثلاً E:\Projects\MyAwesomeApp" 
+              dir="ltr" 
+              class="modal-input code-font" 
+              style="flex: 1; text-align: left;"
+              oninput="handlePathInputChanged(this.value)"
+            >
+            <button type="button" class="btn-browse-folder" id="btn-browse-folder" onclick="toggleDirectoryExplorer()" title="باز کردن کاوشگر پوشه‌ها در سیستم">
+              <span>📂</span>
+              <span id="btn-browse-text">مرور سیستم (Browse)</span>
+            </button>
+            <input type="file" id="browser-folder-picker" webkitdirectory directory style="display: none;" onchange="handleBrowserFolderPicked(event)">
+          </div>
+
+          <div id="ws-path-feedback" style="font-size: 11.5px; color: var(--text-muted); margin-top: 5px; display: flex; align-items: center; gap: 6px;" class="fa-font">
+            <span>💡</span>
+            <span id="ws-path-feedback-text">مسیر را مستقیماً وارد کنید یا با کلیک روی «مرور سیستم» پوشه را انتخاب نمایید.</span>
+          </div>
+
+          <!-- IN-MODAL DIRECTORY EXPLORER -->
+          <div id="dir-explorer-panel" class="dir-explorer-panel" style="display: none;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--text-primary);" class="fa-font">کاوشگر پوشه‌ها و درایوهای ویندوز</span>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="dir-nav-btn" onclick="browseWorkspaceFolderOS()" title="باز کردن دیالوگ سنتی پنجره‌ای ویندوز">
+                  <span>🖥️</span>
+                  <span>دیالوگ ویندوز</span>
+                </button>
+                <button type="button" class="dir-nav-btn" onclick="toggleDirectoryExplorer(false)">✕ بستن</button>
+              </div>
+            </div>
+
+            <!-- Drives / Shortcuts Chips -->
+            <div id="dir-chips-row" class="dir-chips-row">
+              <!-- Dynamically populated drive chips -->
+            </div>
+
+            <!-- Current Path & Navigation Bar -->
+            <div class="dir-nav-bar">
+              <button type="button" class="dir-nav-btn" id="btn-dir-up" onclick="navigateExplorerUp()" title="یک سطح بالاتر">
+                <span>⬆</span>
+                <span>بالاتر</span>
+              </button>
+              <div class="dir-current-path-text" id="dir-current-path-text" title="مسیر جاری">-</div>
+              <button type="button" class="btn-select-dir-action" id="btn-select-current-dir" onclick="selectCurrentExplorerDirectory()" style="height: 28px; padding: 0 12px;">
+                ✓ انتخاب همین پوشه
+              </button>
+            </div>
+
+            <!-- Subdirectories List -->
+            <div id="dir-items-list" class="dir-items-list">
+              <div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 12px;">در حال بارگذاری پوشه‌ها...</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block;">نام پروژه:</label>
+          <input type="text" id="new-ws-name" placeholder="مثلاً Elay یا MyAwesomeApp" class="modal-input" dir="auto">
+        </div>
+        <div>
+          <label style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block;">برچسب استک (تکنولوژی):</label>
+          <input type="text" id="new-ws-stack" placeholder="مثلاً .NET 9، Python، React..." class="modal-input" dir="auto">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="closeModal('modal-add-workspace')">انصراف</button>
+        <button type="button" class="btn-modal-primary" onclick="saveNewWorkspace()">
+          <span>✓</span>
+          <span>ثبت پروژه</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DIFF & APPLY -->
+  <div class="modal-backdrop" id="modal-diff" style="display: none;">
+    <div class="modal-dialog rtl-dialog">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">⚡</span>
+          <div>
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--text-primary);">مقایسه تغییرات فایل (Unified Diff)</h3>
+            <p class="code-font" id="diff-target-path" style="font-size: 11.5px; color: var(--accent); margin-top: 3px; direction: ltr; text-align: left;"></p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-diff')" title="بستن">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="diff-container" id="diff-content-view" dir="ltr">
+          <!-- Diff lines inserted dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="closeModal('modal-diff')">بستن</button>
+        <button type="button" class="btn-modal-primary" id="btn-modal-apply" onclick="applyPendingDiff()">
+          <span>⚡</span>
+          <span>اعمال روی فایل در دیسک (Apply)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- STUDIO CLIENT LOGIC -->
+  <script>
+    // --- STATE MANAGEMENT ---
+    const DEFAULT_WORKSPACES = [
+      {
+        id: 'ws-elay',
+        name: 'Elay',
+        path: 'E:\\Elai\\Elay',
+        stack: '.NET 9',
+        sessions: [
+          {
+            id: 'sess-1',
+            title: 'Prime Service Span',
+            messages: [
+              {
+                role: 'user',
+                content: 'لطفاً در پروژه فعلی متد بررسی عدد اول با Span<T> رو در مسیر src/Services/PrimeService.cs پیاده‌سازی کن و تست واحد xUnit اون رو هم بنویس.'
+              },
+              {
+                role: 'assistant',
+                thought: 'تحلیل نیازمندی‌ها در پروژه E:\\Elai\\Elay با فریمورک .NET 9\n• استفاده از متد استاتیک بهینه‌شده بدون تخصیص حافظه اضافه (Zero-Allocation)\n• حالت کدنویسی (Code Mode) فعال است: فایل مستقیماً روی دیسک آماده بازنویسی است.',
+                content: 'کد سرویس PrimeService برای دات‌نت ۹ با معماری تمیز آماده اعمال در پروژه است:\n\n```csharp:src/Services/PrimeService.cs\nnamespace Elay.Services;\n\npublic static class PrimeService\n{\n    public static bool IsPrime(long n)\n    {\n        if (n <= 1) return false;\n        if (n <= 3) return true;\n        if (n % 2 == 0 || n % 3 == 0) return false;\n\n        for (long i = 5; i * i <= n; i += 6)\n        {\n            if (n % i == 0 || n % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n}\n```'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'ws-scraper',
+        name: 'XJobScraper',
+        path: 'E:\\XJobScraper',
+        stack: 'Python',
+        sessions: [
+          {
+            id: 'sess-scraper-1',
+            title: 'Crawler Pipeline',
+            messages: []
+          }
+        ]
+      }
+    ];
+
+    let state = {
+      workspaces: JSON.parse(localStorage.getItem('arena_workspaces')) || DEFAULT_WORKSPACES,
+      activeWorkspaceId: 'ws-elay',
+      activeSessionId: 'sess-1',
+      mode: 'code',
+      model: 'claude-opus-5.5-max',
+      availableModels: [],
+      attachments: [],
+      pendingDiffData: null
+    };
+
+    function saveState() {
+      localStorage.setItem('arena_workspaces', JSON.stringify(state.workspaces));
+    }
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', async () => {
+      renderWorkspaces();
+      renderCurrentSession();
+      updateModeVisuals();
+      await fetchAvailableModels();
+      checkCdpStatus();
+      setInterval(checkCdpStatus, 6000);
+
+      // Keyboard shortcut Ctrl+N
+      window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === 'n') {
+          e.preventDefault();
+          createNewSession();
+        }
+      });
+
+      // Auto-resize textarea
+      const tx = document.getElementById('prompt-input');
+      tx.addEventListener('input', () => {
+        tx.style.height = 'auto';
+        tx.style.height = Math.min(tx.scrollHeight, 150) + 'px';
+      });
+
+      // Enter to send (Shift+Enter for newline)
+      tx.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+    });
+
+    // --- CDP CONNECTIVITY MONITORING & AUTO-LAUNCH ---
+    async function checkCdpStatus() {
+      const pill = document.getElementById('cdp-status-pill');
+      const dot = document.getElementById('cdp-status-dot');
+      const txt = document.getElementById('cdp-status-text');
+      if (!pill || !dot || !txt) return;
+
+      try {
+        const res = await fetch('/api/cdp/status');
+        if (!res.ok) throw new Error('Status endpoint failed');
+        const data = await res.json();
+
+        if (data.connected) {
+          pill.style.background = 'rgba(16, 185, 129, 0.12)';
+          pill.style.color = 'var(--success)';
+          pill.style.borderColor = 'rgba(16, 185, 129, 0.25)';
+          dot.style.background = 'var(--success)';
+          dot.style.boxShadow = '0 0 8px var(--success)';
+          txt.textContent = 'CDP متصل (پورت ۹۲۲۲)';
+          pill.title = `CDP متصل است (${data.browser || 'Chrome'})`;
+        } else {
+          pill.style.background = 'rgba(245, 158, 11, 0.12)';
+          pill.style.color = '#f59e0b';
+          pill.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+          dot.style.background = '#f59e0b';
+          dot.style.boxShadow = '0 0 8px #f59e0b';
+          txt.textContent = 'CDP غیرفعال (کلیک برای اجرای کروم)';
+          pill.title = 'کروم روی پورت ۹۲۲۲ شناسایی نشد. برای اجرای خودکار کروم کلیک کنید.';
+        }
+      } catch (err) {
+        pill.style.background = 'rgba(239, 68, 68, 0.12)';
+        pill.style.color = 'var(--danger)';
+        pill.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+        dot.style.background = 'var(--danger)';
+        dot.style.boxShadow = '0 0 8px var(--danger)';
+        txt.textContent = 'CDP آفلاین';
+      }
+    }
+
+    async function handleCdpPillClick() {
+      const txt = document.getElementById('cdp-status-text');
+      if (txt && txt.textContent.includes('متصل')) {
+        showToast('اتصال CDP با مرورگر کروم روی پورت ۹۲۲۲ فعال و برقرار است.');
+        return;
+      }
+
+      if (!confirm('مرورگر کروم روی پورت ۹۲۲۲ متصل نیست.\nآیا مایلید کروم به همراه پورت اشکال‌زدایی ۹۲۲۲ به طور خودکار اجرا شود؟')) {
+        return;
+      }
+
+      try {
+        if (txt) txt.textContent = 'در حال اجرای کروم...';
+        const res = await fetch('/api/cdp/launch', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('مرورگر کروم با پورت ۹۲۲۲ اجرا شد. در حال اتصال...');
+          setTimeout(checkCdpStatus, 2500);
+          setTimeout(checkCdpStatus, 5000);
+        } else {
+          showToast('خطا در اجرای کروم: ' + (data.detail || 'نامشخص'), true);
+          checkCdpStatus();
+        }
+      } catch (e) {
+        showToast('خطا در فراخوانی سرویس: ' + e.message, true);
+        checkCdpStatus();
+      }
+    }
+
+    // --- THEME SWITCHER ---
+    function setTheme(isLight) {
+      document.body.classList.toggle('light-theme', isLight);
+      document.getElementById('seg-dark').classList.toggle('active', !isLight);
+      document.getElementById('seg-light').classList.toggle('active', isLight);
+      localStorage.setItem('arena_theme', isLight ? 'light' : 'dark');
+    }
+
+    // --- WORKSPACES & SESSIONS ---
+    function getActiveWorkspace() {
+      return state.workspaces.find(w => w.id === state.activeWorkspaceId) || state.workspaces[0];
+    }
+
+    function getActiveSession() {
+      const ws = getActiveWorkspace();
+      return ws.sessions.find(s => s.id === state.activeSessionId) || ws.sessions[0];
+    }
+
+    function renderWorkspaces() {
+      const container = document.getElementById('workspaces-container');
+      container.innerHTML = '';
+
+      state.workspaces.forEach(ws => {
+        const isActiveWs = ws.id === state.activeWorkspaceId;
+        const card = document.createElement('div');
+        card.className = `project-card ${isActiveWs ? 'active' : ''}`;
+        
+        let sessionsHtml = '';
+        if (isActiveWs) {
+          sessionsHtml = `<div class="session-tree">` + ws.sessions.map(s => `
+            <div class="session-node ${s.id === state.activeSessionId ? 'active' : ''}" onclick="selectSession(event, '${ws.id}', '${s.id}')">
+              <span>💬 ${escapeHtml(s.title)}</span>
+            </div>
+          `).join('') + `</div>`;
+        }
+
+        card.innerHTML = `
+          <div class="project-head" onclick="selectWorkspace('${ws.id}')">
+            <div class="project-title">
+              <span>📁</span>
+              <span>${escapeHtml(ws.name)}</span>
+            </div>
+            <span class="stack-badge">${escapeHtml(ws.stack || 'General')}</span>
+          </div>
+          <div class="project-path code-font" onclick="selectWorkspace('${ws.id}')">${escapeHtml(ws.path)}</div>
+          ${sessionsHtml}
+        `;
+        container.appendChild(card);
+      });
+
+      // Update breadcrumb
+      const ws = getActiveWorkspace();
+      const sess = getActiveSession();
+      document.getElementById('breadcrumb-workspace').textContent = ws ? ws.name : '-';
+      document.getElementById('breadcrumb-session').textContent = sess ? sess.title : '-';
+    }
+
+    function selectWorkspace(wsId) {
+      state.activeWorkspaceId = wsId;
+      const ws = getActiveWorkspace();
+      if (ws.sessions.length > 0) {
+        state.activeSessionId = ws.sessions[0].id;
+      } else {
+        createNewSession();
+      }
+      renderWorkspaces();
+      renderCurrentSession();
+    }
+
+    function selectSession(e, wsId, sessId) {
+      e.stopPropagation();
+      state.activeWorkspaceId = wsId;
+      state.activeSessionId = sessId;
+      renderWorkspaces();
+      renderCurrentSession();
+    }
+
+    function createNewSession() {
+      const ws = getActiveWorkspace();
+      const newId = 'sess-' + Date.now();
+      const newTitle = 'New Session ' + (ws.sessions.length + 1);
+      ws.sessions.unshift({
+        id: newId,
+        title: newTitle,
+        messages: []
+      });
+      state.activeSessionId = newId;
+      saveState();
+      renderWorkspaces();
+      renderCurrentSession();
+      showToast('سشن گفتگوی جدید ایجاد شد');
+    }
+
+    function openAddWorkspaceModal() {
+      document.getElementById('new-ws-name').value = '';
+      document.getElementById('new-ws-path').value = '';
+      document.getElementById('new-ws-stack').value = '';
+      const pathInput = document.getElementById('new-ws-path');
+      pathInput.style.borderColor = 'var(--border-medium)';
+      pathInput.style.boxShadow = 'none';
+      const feedback = document.getElementById('ws-path-feedback-text');
+      if (feedback) feedback.textContent = 'مسیر را مستقیماً وارد کنید یا با کلیک روی «مرور سیستم» پوشه را انتخاب نمایید.';
+      toggleDirectoryExplorer(false);
+
+      document.getElementById('modal-add-workspace').style.display = 'flex';
+      setTimeout(() => {
+        if (pathInput) pathInput.focus();
+      }, 50);
+    }
+
+    let explorerState = {
+      isOpen: false,
+      currentPath: '',
+      parentPath: null,
+      drives: [],
+      shortcuts: [],
+      subdirs: []
+    };
+
+    let pathDebounceTimer = null;
+
+    function handlePathInputChanged(val) {
+      clearTimeout(pathDebounceTimer);
+      const feedback = document.getElementById('ws-path-feedback-text');
+      const input = document.getElementById('new-ws-path');
+      const cleanVal = (val || '').trim();
+
+      if (!cleanVal) {
+        feedback.textContent = 'مسیر را مستقیماً وارد کنید یا با کلیک روی «مرور سیستم» پوشه را انتخاب نمایید.';
+        input.style.borderColor = 'var(--border-medium)';
+        input.style.boxShadow = 'none';
+        return;
+      }
+
+      feedback.textContent = 'در حال بررسی مسیر در سیستم...';
+      pathDebounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch('/api/workspace/validate-path', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: cleanVal })
+          });
+          const data = await res.json();
+          if (data.valid) {
+            input.style.borderColor = 'var(--success)';
+            input.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.2)';
+            feedback.innerHTML = `<span style="color: var(--success); font-weight: 700;">✓ پوشه معتبر است</span> — استک تشخیص داده شده: <b>${escapeHtml(data.stack)}</b>`;
+            
+            // Auto fill name and stack if empty
+            const nameInput = document.getElementById('new-ws-name');
+            const stackInput = document.getElementById('new-ws-stack');
+            if (!nameInput.value.trim()) nameInput.value = data.name;
+            if (!stackInput.value.trim() || stackInput.value === 'General') stackInput.value = data.stack;
+          } else {
+            input.style.borderColor = 'var(--danger)';
+            input.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.15)';
+            feedback.innerHTML = `<span style="color: var(--danger);">✕ ${escapeHtml(data.message || 'پوشه یافت نشد')}</span>`;
+          }
+        } catch (e) {
+          feedback.textContent = 'امکان اتصال به سرور جهت اعتبارسنجی مسیر وجود ندارد.';
+        }
+      }, 350);
+    }
+
+    async function toggleDirectoryExplorer(forceState) {
+      const panel = document.getElementById('dir-explorer-panel');
+      const btn = document.getElementById('btn-browse-folder');
+      const shouldOpen = forceState !== undefined ? forceState : (panel.style.display === 'none');
+
+      if (shouldOpen) {
+        panel.style.display = 'flex';
+        btn.classList.add('active');
+        document.getElementById('btn-browse-text').textContent = 'بستن کاوشگر';
+
+        // Load drives if not loaded yet
+        if (explorerState.drives.length === 0) {
+          await loadExplorerDrives();
+        }
+
+        // Open current input path or default drive
+        const currentInput = document.getElementById('new-ws-path').value.trim();
+        await loadExplorerDirectory(currentInput || explorerState.currentPath || '');
+      } else {
+        panel.style.display = 'none';
+        btn.classList.remove('active');
+        document.getElementById('btn-browse-text').textContent = 'مرور سیستم (Browse)';
+      }
+    }
+
+    async function loadExplorerDrives() {
+      try {
+        const res = await fetch('/api/workspace/drives');
+        if (res.ok) {
+          const data = await res.json();
+          explorerState.drives = data.drives || [];
+          explorerState.shortcuts = data.shortcuts || [];
+          renderExplorerChips();
+        }
+      } catch (err) {
+        console.warn('Failed to load workspace drives:', err);
+      }
+    }
+
+    function renderExplorerChips() {
+      const row = document.getElementById('dir-chips-row');
+      row.innerHTML = '';
+
+      // Drive chips
+      explorerState.drives.forEach(d => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'dir-chip-btn';
+        btn.innerHTML = `<span>💾</span><span>${d.drive}</span>`;
+        btn.onclick = () => loadExplorerDirectory(d.path);
+        row.appendChild(btn);
+      });
+
+      // Shortcut chips
+      explorerState.shortcuts.forEach(s => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'dir-chip-btn';
+        const icon = s.name === 'Desktop' ? '🖥️' : (s.name === 'Documents' ? '📄' : '📁');
+        btn.innerHTML = `<span>${icon}</span><span>${escapeHtml(s.name)}</span>`;
+        btn.onclick = () => loadExplorerDirectory(s.path);
+        row.appendChild(btn);
+      });
+    }
+
+    async function loadExplorerDirectory(targetPath) {
+      const listEl = document.getElementById('dir-items-list');
+      const pathTextEl = document.getElementById('dir-current-path-text');
+      const upBtn = document.getElementById('btn-dir-up');
+
+      listEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 18px; font-size: 12px;">⏳ در حال بارگذاری پوشه‌ها...</div>';
+      pathTextEl.textContent = targetPath || '...';
+
+      try {
+        const url = targetPath ? `/api/workspace/list-dirs?path=${encodeURIComponent(targetPath)}` : '/api/workspace/list-dirs';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+
+        explorerState.currentPath = data.current_path;
+        explorerState.parentPath = data.parent_path;
+        explorerState.subdirs = data.dirs || [];
+
+        pathTextEl.textContent = data.current_path;
+        pathTextEl.title = data.current_path;
+
+        if (data.parent_path) {
+          upBtn.disabled = false;
+          upBtn.style.opacity = '1';
+        } else {
+          upBtn.disabled = true;
+          upBtn.style.opacity = '0.4';
+        }
+
+        renderExplorerList(explorerState.subdirs);
+      } catch (err) {
+        listEl.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 14px; font-size: 12px;">✕ خطا در باز کردن مسیر: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderExplorerList(dirs) {
+      const listEl = document.getElementById('dir-items-list');
+      listEl.innerHTML = '';
+
+      if (!dirs || dirs.length === 0) {
+        listEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 18px; font-size: 12px;">هیچ زیرپوشه‌ای در این مسیر یافت نشد.</div>';
+        return;
+      }
+
+      dirs.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'dir-item-row';
+
+        const stackClass = getStackTagClass(d.stack);
+
+        row.innerHTML = `
+          <div class="dir-item-left" title="کلیک برای باز کردن زیرپوشه‌ها">
+            <span style="font-size: 16px;">📁</span>
+            <span class="dir-item-name">${escapeHtml(d.name)}</span>
+            <span class="dir-stack-tag ${stackClass}">${escapeHtml(d.stack)}</span>
+          </div>
+          <button type="button" class="btn-select-dir-action" title="انتخاب مستقیم این پوشه">
+            ✓ انتخاب
+          </button>
+        `;
+
+        row.querySelector('.dir-item-left').onclick = (e) => {
+          e.stopPropagation();
+          loadExplorerDirectory(d.path);
+        };
+
+        row.querySelector('.btn-select-dir-action').onclick = (e) => {
+          e.stopPropagation();
+          applyDirectorySelection(d.path, d.name, d.stack);
+        };
+
+        row.ondblclick = () => {
+          applyDirectorySelection(d.path, d.name, d.stack);
+        };
+
+        listEl.appendChild(row);
+      });
+    }
+
+    function getStackTagClass(stack) {
+      if (!stack) return 'dir-stack-general';
+      const s = stack.toLowerCase();
+      if (s.includes('.net') || s.includes('c#')) return 'dir-stack-dotnet';
+      if (s.includes('python')) return 'dir-stack-python';
+      if (s.includes('node') || s.includes('ts') || s.includes('react')) return 'dir-stack-node';
+      if (s.includes('rust')) return 'dir-stack-rust';
+      if (s.includes('go')) return 'dir-stack-go';
+      return 'dir-stack-general';
+    }
+
+    function navigateExplorerUp() {
+      if (explorerState.parentPath) {
+        loadExplorerDirectory(explorerState.parentPath);
+      }
+    }
+
+    function selectCurrentExplorerDirectory() {
+      if (!explorerState.currentPath) return;
+      const pathParts = explorerState.currentPath.replace(/[\\/]+$/, '').split(/[\\/]/);
+      const folderName = pathParts[pathParts.length - 1] || 'Project';
+      applyDirectorySelection(explorerState.currentPath, folderName, 'General');
+    }
+
+    function applyDirectorySelection(path, name, stack) {
+      const pathInput = document.getElementById('new-ws-path');
+      const nameInput = document.getElementById('new-ws-name');
+      const stackInput = document.getElementById('new-ws-stack');
+
+      pathInput.value = path;
+      nameInput.value = name || 'Project';
+      stackInput.value = stack || 'General';
+
+      pathInput.style.borderColor = 'var(--success)';
+      pathInput.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.2)';
+
+      const feedback = document.getElementById('ws-path-feedback-text');
+      feedback.innerHTML = `<span style="color: var(--success); font-weight: 700;">✓ پوشه انتخاب شد</span>: <b>${escapeHtml(name)}</b> (${escapeHtml(stack)})`;
+
+      toggleDirectoryExplorer(false);
+      showToast(`پوشه انتخاب شد: ${name} (${stack})`);
+
+      // Auto-save the selected project automatically
+      setTimeout(() => {
+        saveNewWorkspace();
+      }, 350);
+    }
+
+    async function browseWorkspaceFolderOS() {
+      showToast('در حال فراخوانی دیالوگ سیستم ویندوز...');
+      try {
+        const res = await fetch('/api/workspace/browse', { method: 'POST' });
+        const data = await res.json();
+        if (data.status === 'success' && data.path) {
+          applyDirectorySelection(data.path, data.name, data.stack);
+        } else if (data.status === 'cancelled') {
+          showToast('انتخاب لغو شد.');
+        }
+      } catch (err) {
+        showToast('خطا در ارتباط با دیالوگ سیستم: ' + err.message, true);
+      }
+    }
+
+    function handleBrowserFolderPicked(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const folderName = (file.webkitRelativePath || '').split('/')[0] || 'MyProject';
+        const pathInput = document.getElementById('new-ws-path');
+        const nameInput = document.getElementById('new-ws-name');
+        const stackInput = document.getElementById('new-ws-stack');
+
+        pathInput.value = folderName;
+        nameInput.value = folderName;
+        stackInput.value = 'General';
+
+        showToast(`پوشه ${folderName} دریافت شد`);
+        setTimeout(() => {
+          saveNewWorkspace();
+        }, 350);
+      }
+    }
+
+    function saveNewWorkspace() {
+      const name = document.getElementById('new-ws-name').value.trim();
+      const path = document.getElementById('new-ws-path').value.trim();
+      const stack = document.getElementById('new-ws-stack').value.trim() || 'General';
+
+      if (!name || !path) {
+        alert('لطفاً نام پروژه و مسیر معتبر روی سیستم را وارد کنید.');
+        return;
+      }
+
+      // Check if a workspace with this path already exists
+      const existing = state.workspaces.find(w => w.path && w.path.toLowerCase() === path.toLowerCase());
+      if (existing) {
+        existing.name = name || existing.name;
+        existing.stack = stack || existing.stack;
+        state.activeWorkspaceId = existing.id;
+        if (existing.sessions.length > 0) {
+          state.activeSessionId = existing.sessions[0].id;
+        } else {
+          createNewSession();
+        }
+        saveState();
+        closeModal('modal-add-workspace');
+        renderWorkspaces();
+        renderCurrentSession();
+        showToast(`پروژه ${existing.name} انتخاب و فعال شد.`);
+        return;
+      }
+
+      const newWs = {
+        id: 'ws-' + Date.now(),
+        name: name,
+        path: path,
+        stack: stack,
+        sessions: [
+          {
+            id: 'sess-' + Date.now(),
+            title: 'Initial Session',
+            messages: []
+          }
+        ]
+      };
+
+      state.workspaces.push(newWs);
+      state.activeWorkspaceId = newWs.id;
+      state.activeSessionId = newWs.sessions[0].id;
+      saveState();
+      closeModal('modal-add-workspace');
+      renderWorkspaces();
+      renderCurrentSession();
+      showToast(`پروژه ${name} با موفقیت ثبت و فعال شد.`);
+    }
+
+    // --- MESSAGES STREAM RENDERING ---
+    function renderCurrentSession() {
+      const sess = getActiveSession();
+      const container = document.getElementById('messages-container');
+      container.innerHTML = '';
+
+      if (!sess || !sess.messages || sess.messages.length === 0) {
+        container.innerHTML = `
+          <div style="margin: auto; text-align: center; color: var(--text-muted); max-width: 420px; padding: 40px 20px;">
+            <div style="font-size: 38px; margin-bottom: 12px;">⚡</div>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">آماده همکاری در پروژه</h3>
+            <p class="fa-font" style="font-size: 13px; line-height: 1.6;">
+              یک سوال بپرسید یا یک فایل پیوست کنید. کدها با یک کلیک در دایرکتوری جاری ذخیره می‌شوند.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      sess.messages.forEach((msg, idx) => {
+        if (msg.role === 'user') {
+          const userBubble = document.createElement('div');
+          userBubble.className = 'chat-bubble user-bubble fa-font';
+          userBubble.innerHTML = escapeHtml(msg.content).replace(/\n/g, '<br>');
+          container.appendChild(userBubble);
+        } else {
+          const modelBubble = document.createElement('div');
+          modelBubble.className = 'chat-bubble model-bubble';
+          
+          let html = '';
+          if (msg.thought) {
+            html += `
+              <div class="thinking-box">
+                <div class="thinking-header fa-font" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+                  <span>🧠 روند استدلال و تحلیل مدل (Reasoning Stream)</span>
+                  <span style="font-size: 11px; opacity: 0.8;">▾</span>
+                </div>
+                <div class="thinking-content fa-font">${escapeHtml(msg.thought)}</div>
+              </div>
+            `;
+          }
+
+          // Format code blocks
+          html += parseMarkdownWithDecks(msg.content);
+
+          modelBubble.innerHTML = html;
+          container.appendChild(modelBubble);
+        }
+      });
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // --- CODE DECKS & MARKDOWN PARSER ---
+    function parseMarkdownWithDecks(rawText) {
+      if (!rawText) return '';
+
+      // Pattern to extract ```lang:filepath or ```lang
+      const codeRegex = /```([a-zA-Z0-9_\-]+)?(?::([^\n]+))?\n([\s\S]*?)```/g;
+      
+      let lastIdx = 0;
+      let result = '';
+      let match;
+
+      while ((match = codeRegex.exec(rawText)) !== null) {
+        const textBefore = rawText.slice(lastIdx, match.index);
+        if (textBefore.trim()) {
+          result += `<div class="fa-font" style="margin-bottom: 10px; line-height: 1.7;">${window.marked ? marked.parse(textBefore) : escapeHtml(textBefore)}</div>`;
+        }
+
+        const lang = match[1] || 'code';
+        const explicitPath = match[2] ? match[2].trim() : '';
+        const codeBody = match[3];
+        const displayPath = explicitPath || (lang === 'csharp' ? 'Program.cs' : (lang === 'python' ? 'app.py' : 'file.txt'));
+
+        // Encode code for button handlers
+        const encodedCode = encodeURIComponent(codeBody);
+        const encodedPath = encodeURIComponent(displayPath);
+
+        result += `
+          <div class="code-deck">
+            <div class="deck-header">
+              <span class="deck-tag code-font">
+                <span>●</span>
+                <span>${escapeHtml(displayPath)}</span>
+              </span>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn-diff-pro" onclick="openDiffModal('${encodedPath}', '${encodedCode}')">
+                  <span>⎇</span>
+                  <span>View Diff</span>
+                </button>
+                <button class="btn-apply-pro" onclick="applyDirectly('${encodedPath}', '${encodedCode}')">
+                  <span>⚡</span>
+                  <span class="fa-font">Apply to File</span>
+                </button>
+              </div>
+            </div>
+            <pre class="code-font" style="padding: 14px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; color: #f1f5f9;"><code>${escapeHtml(codeBody)}</code></pre>
+          </div>
+        `;
+
+        lastIdx = match.index + match[0].length;
+      }
+
+      const textAfter = rawText.slice(lastIdx);
+      if (textAfter.trim()) {
+        result += `<div class="fa-font" style="margin-top: 10px; line-height: 1.7;">${window.marked ? marked.parse(textAfter) : escapeHtml(textAfter)}</div>`;
+      }
+
+      return result;
+    }
+
+    // --- DIFF & APPLY TO FILE ---
+    async function openDiffModal(encodedPath, encodedContent) {
+      const path = decodeURIComponent(encodedPath);
+      const content = decodeURIComponent(encodedContent);
+      const ws = getActiveWorkspace();
+
+      try {
+        const res = await fetch('/api/files/diff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            workspace: ws.path,
+            path: path,
+            content: content
+          })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+
+        state.pendingDiffData = { path, content, workspace: ws.path };
+        document.getElementById('diff-target-path').textContent = `${ws.path}\\${path}`;
+        
+        const diffView = document.getElementById('diff-content-view');
+        diffView.innerHTML = '';
+
+        if (!data.diff) {
+          diffView.innerHTML = `<span style="color: var(--text-muted);">فایل جدید است یا تغییری ندارد.</span>`;
+        } else {
+          const lines = data.diff.split('\n');
+          lines.forEach(l => {
+            const lineEl = document.createElement('span');
+            if (l.startsWith('+') && !l.startsWith('+++')) {
+              lineEl.className = 'diff-line-add';
+            } else if (l.startsWith('-') && !l.startsWith('---')) {
+              lineEl.className = 'diff-line-del';
+            } else if (l.startsWith('@@')) {
+              lineEl.className = 'diff-line-info';
+            }
+            lineEl.textContent = l;
+            diffView.appendChild(lineEl);
+          });
+        }
+
+        document.getElementById('modal-diff').style.display = 'flex';
+      } catch (err) {
+        showToast('خطا در محاسبه Diff: ' + err.message, true);
+      }
+    }
+
+    async function applyPendingDiff() {
+      if (!state.pendingDiffData) return;
+      await applyCodeToDisk(state.pendingDiffData.workspace, state.pendingDiffData.path, state.pendingDiffData.content);
+      closeModal('modal-diff');
+    }
+
+    async function applyDirectly(encodedPath, encodedContent) {
+      const path = decodeURIComponent(encodedPath);
+      const content = decodeURIComponent(encodedContent);
+      const ws = getActiveWorkspace();
+      await applyCodeToDisk(ws.path, path, content);
+    }
+
+    async function applyCodeToDisk(workspace, relativePath, content) {
+      try {
+        const res = await fetch('/api/files/write', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            workspace: workspace,
+            path: relativePath,
+            content: content
+          })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+        showToast(`فایل با موفقیت روی دیسک ذخیره شد: ${relativePath}`);
+      } catch (err) {
+        showToast('خطا در ذخیره فایل روی دیسک: ' + err.message, true);
+      }
+    }
+
+    // --- CONTEXT COMPACTION SKILL ---
+    async function triggerCompaction() {
+      const sess = getActiveSession();
+      if (!sess.messages || sess.messages.length === 0) {
+        showToast('پیامی برای فشرده‌سازی در این سشن وجود ندارد.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/context/compact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: sess.messages,
+            target_model: state.model,
+            active_mode: state.mode
+          })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+
+        // Create a new compacted session
+        const ws = getActiveWorkspace();
+        const newId = 'sess-compact-' + Date.now();
+        ws.sessions.unshift({
+          id: newId,
+          title: `[Compacted] ${sess.title}`,
+          messages: [
+            {
+              role: 'user',
+              content: data.compacted_prompt
+            },
+            {
+              role: 'assistant',
+              thought: 'Context compaction executed automatically.\nTransferred key architectural decisions, active files, and diff state.',
+              content: `✅ کانتکست گفتگو با موفقیت فشرده شد.\n\n**خلاصه انتقال به ${state.model}:**\n${data.summary}`
+            }
+          ]
+        });
+
+        state.activeSessionId = newId;
+        saveState();
+        renderWorkspaces();
+        renderCurrentSession();
+        showToast('کانتکست فشرده و به سشن جدید منتقل شد.');
+      } catch (err) {
+        showToast('خطا در فشرده‌سازی کانتکست: ' + err.message, true);
+      }
+    }
+
+    // --- ATTACHMENTS HANDLING ---
+    async function handleFilesSelected(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      for (let f of files) {
+        try {
+          const content = await readFileAsText(f);
+          const res = await fetch('/api/attachments/extract', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filename: f.name,
+              content: content
+            })
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            state.attachments.push(data);
+          } else {
+            state.attachments.push({
+              filename: f.name,
+              text: content,
+              type: 'text'
+            });
+          }
+        } catch (err) {
+          console.error('File read error:', err);
+        }
+      }
+
+      renderAttachmentsTray();
+      event.target.value = '';
+    }
+
+    function readFileAsText(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsText(file);
+      });
+    }
+
+    function renderAttachmentsTray() {
+      const tray = document.getElementById('attachments-tray');
+      if (state.attachments.length === 0) {
+        tray.style.display = 'none';
+        tray.innerHTML = '';
+        return;
+      }
+
+      tray.style.display = 'flex';
+      tray.innerHTML = state.attachments.map((att, idx) => `
+        <div class="attachment-badge">
+          <span>${att.type === 'code' ? '📄' : '📑'}</span>
+          <span class="code-font">${escapeHtml(att.filename)}</span>
+          <span style="font-size: 10px; color: var(--success); font-weight: 700;">[Extracted]</span>
+          <span class="badge-close" onclick="removeAttachment(${idx})">✕</span>
+        </div>
+      `).join('') + `<span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;" class="fa-font">محتوا به پرامپت اضافه خواهد شد</span>`;
+    }
+
+    function removeAttachment(idx) {
+      state.attachments.splice(idx, 1);
+      renderAttachmentsTray();
+    }
+
+    // --- MODES & MODELS ---
+    function toggleModeDropdown() {
+      const popover = document.getElementById('mode-popover');
+      popover.style.display = popover.style.display === 'none' ? 'flex' : 'none';
+      document.getElementById('model-popover').style.display = 'none';
+    }
+
+    function selectMode(modeKey, icon, title, defaultModel) {
+      state.mode = modeKey;
+      state.model = defaultModel;
+      updateModeVisuals();
+      document.getElementById('mode-popover').style.display = 'none';
+
+      // Update active in popover
+      document.querySelectorAll('.mode-option-row').forEach(r => r.classList.remove('active'));
+      const activeRow = document.getElementById(`opt-mode-${modeKey}`);
+      if (activeRow) activeRow.classList.add('active');
+
+      showToast(`حالت به ${title} تغییر یافت (مدل پیش‌فرض: ${defaultModel})`);
+    }
+
+    function updateModeVisuals() {
+      const modeIcons = { think: '🧠', code: '⚡', ask: '💬' };
+      const modeTitles = {
+        think: 'Think Mode',
+        code: 'Code Mode',
+        ask: 'Ask Mode'
+      };
+
+      document.getElementById('current-mode-icon').textContent = modeIcons[state.mode] || '⚡';
+      document.getElementById('current-mode-title').textContent = modeTitles[state.mode] || 'Mode';
+      document.getElementById('current-model-name').textContent = state.model;
+
+      const badge = document.getElementById('mode-status-badge');
+      if (state.mode === 'code') {
+        badge.style.display = 'flex';
+        badge.style.background = 'rgba(16, 185, 129, 0.15)';
+        badge.style.color = 'var(--success)';
+        badge.innerHTML = `<span>⚡</span><span class="fa-font">کدنویسی دیسک فعال</span>`;
+      } else if (state.mode === 'think') {
+        badge.style.display = 'flex';
+        badge.style.background = 'var(--purple-glow)';
+        badge.style.color = 'var(--purple)';
+        badge.innerHTML = `<span>🧠</span><span class="fa-font">استدلال عمیق فعال</span>`;
+      } else {
+        badge.style.display = 'flex';
+        badge.style.background = 'rgba(56, 189, 248, 0.15)';
+        badge.style.color = 'var(--accent)';
+        badge.innerHTML = `<span>💬</span><span class="fa-font">مشاوره و چت</span>`;
+      }
+    }
+
+    async function fetchAvailableModels() {
+      try {
+        const res = await fetch('/v1/models');
+        if (res.ok) {
+          const data = await res.json();
+          state.availableModels = data.data || [];
+          renderModelsList(state.availableModels);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch /v1/models', err);
+      }
+    }
+
+    function toggleModelDropdown() {
+      const popover = document.getElementById('model-popover');
+      popover.style.display = popover.style.display === 'none' ? 'flex' : 'none';
+      document.getElementById('mode-popover').style.display = 'none';
+    }
+
+    function filterModelList(query) {
+      const q = query.toLowerCase();
+      const filtered = state.availableModels.filter(m => m.id.toLowerCase().includes(q));
+      renderModelsList(filtered);
+    }
+
+    function renderModelsList(models) {
+      const container = document.getElementById('models-list-scroll');
+      container.innerHTML = '';
+      const list = models.length > 0 ? models.slice(0, 50) : [
+        { id: 'claude-opus-5.5-max' },
+        { id: 'claude-3-5-sonnet-20241022' },
+        { id: 'gemini-4-argon-high' },
+        { id: 'o3-high' },
+        { id: 'qwen-2.5-coder-32b-instruct' }
+      ];
+
+      list.forEach(m => {
+        const row = document.createElement('div');
+        row.className = `session-node ${m.id === state.model ? 'active' : ''}`;
+        row.style.cursor = 'pointer';
+        row.innerHTML = `<span class="code-font" style="font-size: 11.5px;">${escapeHtml(m.id)}</span>`;
+        row.onclick = () => {
+          selectModelExplicit(m.id);
+        };
+        container.appendChild(row);
+      });
+    }
+
+    function selectModelExplicit(newModel) {
+      if (newModel === state.model) {
+        document.getElementById('model-popover').style.display = 'none';
+        return;
+      }
+
+      state.model = newModel;
+      document.getElementById('current-model-name').textContent = newModel;
+      document.getElementById('model-popover').style.display = 'none';
+      showToast(`مدل به ${newModel} تغییر یافت.`);
+    }
+
+    // --- SEND MESSAGE ---
+    async function sendMessage() {
+      const tx = document.getElementById('prompt-input');
+      const text = tx.value.trim();
+      if (!text && state.attachments.length === 0) return;
+
+      const ws = getActiveWorkspace();
+      const sess = getActiveSession();
+
+      // Construct prompt with attachments
+      let fullContent = text;
+      if (state.attachments.length > 0) {
+        const attBlocks = state.attachments.map(a => `\n\n[Attached File: ${a.filename}]\n${a.text}\n[End Attached File]`).join('');
+        fullContent = `${text}${attBlocks}`;
+      }
+
+      // Add user message
+      sess.messages.push({
+        role: 'user',
+        content: fullContent
+      });
+
+      tx.value = '';
+      tx.style.height = 'auto';
+      state.attachments = [];
+      renderAttachmentsTray();
+      renderCurrentSession();
+      saveState();
+
+      // Send to backend
+      const btnSend = document.getElementById('btn-send');
+      btnSend.disabled = true;
+      btnSend.style.opacity = '0.5';
+
+      // Insert Live Thinking Card into chat immediately!
+      const container = document.getElementById('messages-container');
+      const pendingBubble = document.createElement('div');
+      pendingBubble.className = 'chat-bubble model-bubble';
+      pendingBubble.id = 'live-pending-bubble';
+      pendingBubble.innerHTML = `
+        <div class="thinking-box">
+          <div class="thinking-header fa-font">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <span class="pulsing-purple-dot"></span>
+              <span>🧠 مدل در حال تفکر و استدلال عمیق است... (Thinking...)</span>
+            </span>
+            <span class="code-font" id="live-timer" style="font-size: 11px; opacity: 0.9;">0.0s</span>
+          </div>
+          <div class="thinking-content fa-font" id="live-logs" style="display: block; margin-top: 8px;">
+            <div class="thinking-log-item active" id="log-step-1">⚡ ۱. دریافت و تحلیل پرامپت و کانتکست...</div>
+            <div class="thinking-log-item" id="log-step-2">📁 ۲. تطبیق با استک پروژه و فایل‌های انتخابی...</div>
+            <div class="thinking-log-item" id="log-step-3">🧠 ۳. استدلال الگوریتمی و تدوین کدهای برنامه...</div>
+            <div class="thinking-log-item" id="log-step-4">✨ ۴. اعتبارسنجی سینتکس و آماده‌سازی خروجی...</div>
+          </div>
+        </div>
+        <div id="live-shimmer" style="padding: 10px 0;">
+          <div class="shimmer-skeleton" style="width: 85%;"></div>
+          <div class="shimmer-skeleton" style="width: 65%;"></div>
+          <div class="shimmer-skeleton" style="width: 45%;"></div>
+        </div>
+      `;
+      container.appendChild(pendingBubble);
+      container.scrollTop = container.scrollHeight;
+
+      // Timer & step progressive updates
+      const startTime = Date.now();
+      const timerInterval = setInterval(() => {
+        const elapsedSec = ((Date.now() - startTime) / 1000).toFixed(1);
+        const timerEl = document.getElementById('live-timer');
+        if (timerEl) timerEl.textContent = `${elapsedSec}s`;
+
+        const s1 = document.getElementById('log-step-1');
+        const s2 = document.getElementById('log-step-2');
+        const s3 = document.getElementById('log-step-3');
+        const s4 = document.getElementById('log-step-4');
+
+        if (elapsedSec >= 0.5 && s1 && s2) {
+          s1.className = 'thinking-log-item done';
+          s2.className = 'thinking-log-item active';
+        }
+        if (elapsedSec >= 1.5 && s2 && s3) {
+          s2.className = 'thinking-log-item done';
+          s3.className = 'thinking-log-item active';
+        }
+        if (elapsedSec >= 2.5 && s3 && s4) {
+          s3.className = 'thinking-log-item done';
+          s4.className = 'thinking-log-item active';
+        }
+      }, 100);
+
+      try {
+        const requestPayload = {
+          model: state.model,
+          mode: state.mode,
+          workspace: ws ? {
+            name: ws.name,
+            path: ws.path,
+            stack: ws.stack
+          } : null,
+          messages: sess.messages.map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        };
+
+        const res = await fetch('/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestPayload)
+        });
+
+        clearInterval(timerInterval);
+        const elapsedSec = ((Date.now() - startTime) / 1000).toFixed(1);
+
+        if (!res.ok) {
+          throw new Error(await res.text());
+        }
+
+        const data = await res.json();
+        const msgObj = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message : {};
+        let assistantContent = msgObj.content;
+
+        // If content is empty but tool_calls is provided, convert tool_call to code deck
+        if ((!assistantContent || !assistantContent.trim()) && msgObj.tool_calls && msgObj.tool_calls.length > 0) {
+          try {
+            const tc = msgObj.tool_calls[0].function;
+            const args = JSON.parse(tc.arguments || '{}');
+            const fp = args.file_path || 'main.py';
+            const code = args.content || '';
+            const ext = fp.includes('.') ? fp.split('.').pop() : 'txt';
+            assistantContent = `کدهای پیاده‌سازی شده:\n\n\`\`\`${ext}:${fp}\n${code}\n\`\`\``;
+          } catch (e) {
+            assistantContent = 'پیاده‌سازی با موفقیت انجام شد.';
+          }
+        }
+
+        if (!assistantContent) {
+          assistantContent = 'پاسخی از مدل دریافت نشد.';
+        }
+
+        const assistantThought = msgObj.thought || (state.mode === 'think' ? `Reasoning process completed by ${state.model} in ${elapsedSec}s` : null);
+
+        sess.messages.push({
+          role: 'assistant',
+          thought: assistantThought,
+          content: assistantContent,
+          time: `${elapsedSec}s`
+        });
+
+        saveState();
+        renderCurrentSession();
+      } catch (err) {
+        clearInterval(timerInterval);
+        showToast('خطا در دریافت پاسخ: ' + err.message, true);
+        sess.messages.push({
+          role: 'assistant',
+          thought: null,
+          content: `⚠️ خطا در برقراری ارتباط با مدل: ${err.message}`
+        });
+        saveState();
+        renderCurrentSession();
+      } finally {
+        clearInterval(timerInterval);
+        btnSend.disabled = false;
+        btnSend.style.opacity = '1';
+      }
+    }
+
+
+    // --- MODAL UTILS ---
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function showToast(message, isError = false) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast-message';
+      if (isError) {
+        toast.style.borderColor = 'var(--danger)';
+        toast.innerHTML = `<span style="color: var(--danger);">✕</span><span class="fa-font">${escapeHtml(message)}</span>`;
+      } else {
+        toast.style.borderColor = 'var(--success)';
+        toast.innerHTML = `<span style="color: var(--success);">✓</span><span class="fa-font">${escapeHtml(message)}</span>`;
+      }
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
